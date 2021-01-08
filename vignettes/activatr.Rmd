@@ -1,0 +1,94 @@
+---
+title: "Visualizing Activities with activatr"
+author: "Daniel Schafer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualizing Activities with activatr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`activatr` (pronounced like the word "activator") is a library for parsing GPX files into a standard format, and then manipulating and visualizing those files.
+
+## Getting GPX Files
+
+The process to get a GPX file varies depending on the service you use. In Garmin Connect, you can click the gear menu on an activity and click "Export to GPX". This package includes sample GPXs from my Garmin Forerunner 935 as example files for this vignette.
+
+## Parsing GPX Files
+
+Basic parsing of a GPX file is simple: we use the `parse_gpx` function and pass it the name of the GPX file.
+
+```{r filename}
+library(activatr)
+
+# Get the running_example.gpx file included with this package.
+filename <- system.file(
+  "extdata",
+  "running_example.gpx.gz",
+  package = "activatr")
+
+df <- parse_gpx(filename)
+```
+
+In its default configuration, `parse_gpx` will create a row for every GPS point in the file, and pull out the latitude (`lat`), longitude (`lon`), elevation (`ele`, in meters), and time (`time`) into the tibble:
+
+```{r table, echo=FALSE, results='asis'}
+knitr::kable(head(df, 5))
+```
+
+We can also get a summary of the activity:
+
+```{r summary, results = "hide"}
+summary(df)
+```
+
+```{r summary_table, echo=FALSE, results='asis'}
+knitr::kable(summary(df))
+```
+
+## Visualizing
+
+Once we have the data, it's useful to visualize it. While basic visualizations work as expected with a data frame:
+
+```{r basicplot, warning = FALSE}
+library(ggplot2)
+qplot(lon, lat, data=df)
+```
+
+It's more helpful to overlay this information on a correctly-sized map. To aid in that, `get_map_from_df` gives us a `ggmap` object (from the `ggmap` package), which we can use to visualize our track.
+
+Let's see that on its own to start:
+
+```{r mapplot_display, eval = FALSE}
+ggmap::ggmap(get_ggmap_from_df(df)) + theme_void()
+```
+
+```{r mapplot_run, echo = FALSE}
+# running_example_ggmap is the saved result of calling get_ggmap_from_df(df)
+# We don't run that here because it requires an API key.
+df_ggmap <- running_example_ggmap
+ggmap::ggmap(running_example_ggmap) + theme_void()
+```
+
+The axes show that we now have a ggmap at the right size to visualize the run. So putting it
+all together, we can make a nice basic graphic of the run:
+
+```{r finalplot_display, eval = FALSE}
+ggmap::ggmap(get_ggmap_from_df(df)) +
+  theme_void() +
+  geom_path(aes(x = lon, y = lat), size = 1, data = df, color = "red")
+```
+
+```{r finalplot_run, echo = FALSE}
+ggmap::ggmap(running_example_ggmap) +
+  theme_void() +
+  geom_path(aes(x = lon, y = lat), size = 1, data = df, color = "red")
+```

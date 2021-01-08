@@ -1,0 +1,80 @@
+---
+title: "Advanced Parsing with activatr"
+author: "Daniel Schafer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Advanced Parsing with activatr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`activatr` can parse additional information beyond the basic lat/lon data from GPX/TCX files, as well as sample the files for quicker manipulation.
+
+All of the advanced functionality is included in the `parse_gpx` or `parse_tcx` function with optional arguments. As a reminder, this is what the default parsing would look like and return:
+
+```{r parse}
+library(activatr)
+
+# Get the running_example.gpx file included with this package.
+filename <- system.file(
+  "extdata",
+  "running_example.gpx.gz",
+  package = "activatr")
+
+df <- parse_gpx(filename)
+```
+
+```{r table, echo=FALSE, results='asis'}
+knitr::kable(head(df, 5))
+```
+
+## Parsing extension data
+
+If your GPX file contains additional extension information, `activatr` can parse that as well. In this case, `running_example.gpx` contains heart rate, cadence, and temperature information. We can parse that by setting `detail = "advanced"` in `parse_gpx`:
+
+```{r parse_advanced}
+df_advanced <- parse_gpx(filename, detail = "advanced")
+```
+
+```{r table_advanced, echo=FALSE, results='asis'}
+knitr::kable(head(df_advanced, 5))
+```
+
+Now we can do plots like heart rate over time, or a distribution of cadences:
+
+```{r plot, fig.show = "hold", warning = FALSE, message = FALSE}
+library(ggplot2)
+library(dplyr)
+ggplot(df_advanced) +
+  geom_line(aes(x = time, y = hr), color = "red")
+ggplot(filter(df_advanced, cad > 80)) +
+  geom_density(aes(x = cad * 2), fill = "blue", bw = 1)
+```
+
+## Sampling datapoints
+
+If you're parsing many GPX files or GPX files sampled every second, you often don't need a "full resolution" view of the activity. The `every` argument to `parse_gpx` allows you to only sample some points from the GPX, speeding up the parsing:
+
+```{r sample}
+# Parsing as normal gets all of the rows, but takes longer
+full_time <- system.time({
+  df_full <- parse_gpx(filename)
+})
+nrow(df_full)
+full_time
+
+# Grabbing every hundredth data point runs much faster
+sample_time <- system.time({
+  df_sample <- parse_gpx(filename, every = 100)
+})
+nrow(df_sample)
+sample_time
+```
