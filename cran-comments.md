@@ -1,3 +1,6 @@
+## Resubmission
+This is a resubmission. The previous version had a WARNING because plotly was orphaned -- this was reported at https://github.com/ropensci/plotly/issues/1906 and has now been resolved.
+
 ## Test environments
 * Local OS X install, R 4.0.3, `x86_64-apple-darwin17.0`.
 * Windows via `devtools::check_win_devel`.
