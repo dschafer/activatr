@@ -9,7 +9,7 @@
 status](https://www.r-pkg.org/badges/version/activatr)](https://cran.r-project.org/package=activatr)
 [![R-CMD-check](https://github.com/dschafer/activatr/workflows/R-CMD-check/badge.svg)](https://github.com/dschafer/activatr/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/dschafer/activatr/branch/master/graph/badge.svg)](https://codecov.io/gh/dschafer/activatr?branch=master)
+coverage](https://codecov.io/gh/dschafer/activatr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/dschafer/activatr?branch=master)
 <!-- badges: end -->
 
 `activatr` (pronounced like the word “activator”) is a library for
