@@ -29,8 +29,8 @@ test_that("summary works", {
   expect_equal(as.integer(s$MaxPace), 356)
 
   expect_equal(as.integer(s$AvgElev), 765)
-  expect_equal(as.integer(s$ElevGain), 382)
-  expect_equal(as.integer(s$ElevLoss), 54)
+  expect_equal(as.integer(s$ElevGain), 1640)
+  expect_equal(as.integer(s$ElevLoss), 984)
 })
 
 test_that("summary allows use of full to fill in missing columns", {
@@ -76,8 +76,8 @@ test_that("summary allows for metric system", {
   expect_equal(as.integer(s$MaxPace), 221)
 
   expect_equal(as.integer(s$AvgElev), 233)
-  expect_equal(as.integer(s$ElevGain), 116)
-  expect_equal(as.integer(s$ElevLoss), 16)
+  expect_equal(as.integer(s$ElevGain), 500)
+  expect_equal(as.integer(s$ElevLoss), 300)
 })
 
 test_that("summary includes hr when provided", {
