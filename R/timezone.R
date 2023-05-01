@@ -1,4 +1,3 @@
-
 #' Uses Google Maps Time Zone APIs to localize the time zone.
 #'
 #' This returns a mutated Activatr DF with the time column updated to reflect
