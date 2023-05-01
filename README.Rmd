@@ -99,11 +99,11 @@ all together, we can make a nice basic graphic of the run:
 ```{r finalplot_display, eval = FALSE}
 ggmap::ggmap(get_ggmap_from_df(df)) +
   theme_void() +
-  geom_path(aes(x = lon, y = lat), size = 1, data = df, color = "red")
+  geom_path(aes(x = lon, y = lat), linewidth = 1, data = df, color = "red")
 ```
 
 ```{r finalplot_run, echo = FALSE}
 ggmap::ggmap(running_example_ggmap) +
   theme_void() +
-  geom_path(aes(x = lon, y = lat), size = 1, data = df, color = "red")
+  geom_path(aes(x = lon, y = lat), linewidth = 1, data = df, color = "red")
 ```

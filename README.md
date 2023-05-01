@@ -44,7 +44,8 @@ library(activatr)
 filename <- system.file(
   "extdata",
   "running_example.gpx.gz",
-  package = "activatr")
+  package = "activatr"
+)
 
 df <- parse_gpx(filename)
 ```
@@ -54,13 +55,13 @@ GPS point in the file, and pull out the latitude (`lat`), longitude
 (`lon`), elevation (`ele`, in meters), and time (`time`) into the
 tibble:
 
-|      lat |        lon |  ele | time                |
-| -------: | ---------: | ---: | :------------------ |
-| 37.80405 | \-122.4267 | 17.0 | 2018-11-03 14:24:45 |
-| 37.80406 | \-122.4267 | 16.8 | 2018-11-03 14:24:46 |
-| 37.80408 | \-122.4266 | 17.0 | 2018-11-03 14:24:48 |
-| 37.80409 | \-122.4266 | 17.0 | 2018-11-03 14:24:49 |
-| 37.80409 | \-122.4265 | 17.2 | 2018-11-03 14:24:50 |
+|      lat |       lon |  ele | time                |
+|---------:|----------:|-----:|:--------------------|
+| 37.80405 | -122.4267 | 17.0 | 2018-11-03 14:24:45 |
+| 37.80406 | -122.4267 | 16.8 | 2018-11-03 14:24:46 |
+| 37.80408 | -122.4266 | 17.0 | 2018-11-03 14:24:48 |
+| 37.80409 | -122.4266 | 17.0 | 2018-11-03 14:24:49 |
+| 37.80409 | -122.4265 | 17.2 | 2018-11-03 14:24:50 |
 
 We can also get a summary of the activity:
 
@@ -68,16 +69,16 @@ We can also get a summary of the activity:
 summary(df)
 ```
 
-| Distance | Date                |                 Time |                            AvgPace |                            MaxPace | ElevGain | ElevLoss |    AvgElev | Title                     |
-| -------: | :------------------ | -------------------: | ---------------------------------: | ---------------------------------: | -------: | -------: | ---------: | :------------------------ |
-| 9.407317 | 2018-11-03 14:24:45 | 4622s (\~1.28 hours) | 491.319700444844s (\~8.19 minutes) | 186.462178755299s (\~3.11 minutes) |  188.364 | 253.4996 | \-24.29198 | Sunrise 15K PR (sub-8:00) |
+| Distance | Date                |                 Time |                            AvgPace |                            MaxPace | ElevGain | ElevLoss |   AvgElev | Title                     |
+|---------:|:--------------------|---------------------:|-----------------------------------:|-----------------------------------:|---------:|---------:|----------:|:--------------------------|
+| 9.407317 | 2018-11-03 14:24:45 | 4622s (\~1.28 hours) | 491.319700444844s (\~8.19 minutes) | 186.462178755299s (\~3.11 minutes) | 193.9317 | 259.2122 | -24.29198 | Sunrise 15K PR (sub-8:00) |
 
 Once we have the data, it’s useful to visualize it. While basic
 visualizations work as expected with a data frame:
 
 ``` r
 library(ggplot2)
-qplot(lon, lat, data=df)
+qplot(lon, lat, data = df)
 ```
 
 <img src="man/figures/README-basicplot-1.png" width="100%" />
@@ -101,7 +102,7 @@ the run:
 ``` r
 ggmap::ggmap(get_ggmap_from_df(df)) +
   theme_void() +
-  geom_path(aes(x = lon, y = lat), size = 1, data = df, color = "red")
+  geom_path(aes(x = lon, y = lat), linewidth = 1, data = df, color = "red")
 ```
 
 <img src="man/figures/README-finalplot_run-1.png" width="100%" />
