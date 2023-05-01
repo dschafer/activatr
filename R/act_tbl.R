@@ -84,8 +84,7 @@ is_act_tbl <- function(act_tbl) {
 #' @importFrom timetk slidify
 #' @importFrom tibble tribble
 #' @rdname act_tbl
-summary.act_tbl <- function(
-                            object,
+summary.act_tbl <- function(object,
                             full = FALSE,
                             units = c("imperial", "metric"),
                             ...) {

@@ -53,8 +53,7 @@
 #'   package = "activatr"
 #' )
 #' running_df <- parse_gpx(running_file)
-parse_gpx <- function(
-                      filename,
+parse_gpx <- function(filename,
                       detail = c("basic", "latlon", "advanced"),
                       every = NA) {
   xmldoc <- read_xml(filename)
@@ -156,8 +155,7 @@ parse_gpx <- function(
 #'   package = "activatr"
 #' )
 #' running_df <- parse_gpx(running_file)
-parse_tcx <- function(
-                      filename,
+parse_tcx <- function(filename,
                       detail = c("basic", "latlon", "advanced"),
                       every = NA) {
   xmldoc <- read_xml(filename)

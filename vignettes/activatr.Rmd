@@ -33,7 +33,8 @@ library(activatr)
 filename <- system.file(
   "extdata",
   "running_example.gpx.gz",
-  package = "activatr")
+  package = "activatr"
+)
 
 df <- parse_gpx(filename)
 ```
@@ -60,7 +61,7 @@ Once we have the data, it's useful to visualize it. While basic visualizations w
 
 ```{r basicplot, warning = FALSE}
 library(ggplot2)
-qplot(lon, lat, data=df)
+qplot(lon, lat, data = df)
 ```
 
 It's more helpful to overlay this information on a correctly-sized map. To aid in that, `get_map_from_df` gives us a `ggmap` object (from the `ggmap` package), which we can use to visualize our track.

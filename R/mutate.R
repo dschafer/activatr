@@ -17,8 +17,7 @@
 #' @param lag How far behind to look for the "start" point
 #' @return That same Activatr DF, but with a new \code{distance} column, in
 #'        meters.
-mutate_with_distance <- function(
-                                 df,
+mutate_with_distance <- function(df,
                                  method = c("2D", "3D"),
                                  lead = 0,
                                  lag = 1) {

@@ -30,10 +30,12 @@ Imports:
 RoxygenNote: 7.1.1
 Suggests: 
     covr (>= 3.5.0),
+    lintr (>= 3.0.0),
     ggplot2 (>= 3.3.0),
     knitr (>= 1.30),
     mockery (>= 0.4.2),
     rmarkdown (>= 2.6),
     roxygen2 (>= 7.1.0),
+    styler (>= 1.9.0),
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
