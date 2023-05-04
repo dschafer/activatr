@@ -6,3 +6,6 @@ cran-comments.md
 ^\.github$
 ^codecov\.yml$
 ^CRAN-RELEASE$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
