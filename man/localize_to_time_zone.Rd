@@ -2,28 +2,42 @@
 % Please edit documentation in R/timezone.R
 \name{localize_to_time_zone}
 \alias{localize_to_time_zone}
-\title{Uses Google Maps Time Zone APIs to localize the time zone.}
+\title{Localize time zone values}
 \usage{
 localize_to_time_zone(df)
 }
 \arguments{
-\item{df}{A Activatr DF: a tibble from \code{parse_gpx} or \code{parse_tcx}.}
+\item{df}{An \code{\link[=act_tbl-class]{act_tbl}} object.}
 }
 \value{
-That same Activatr DF, but with the \code{time} column updated to be
-        in the local time zone rather than UTC.
+That same \code{\link[=act_tbl-class]{act_tbl}}, but with the \code{time} column
+updated to be in the local time zone rather than UTC.
 }
 \description{
-This returns a mutated Activatr DF with the time column updated to reflect
-the correct time zone, using the Google Maps Time Zone APIs.
+\code{localize_to_time_zone} uses Google Maps Time Zone APIs to localize the
+time zone in an \code{\link[=act_tbl-class]{act_tbl}}. This modifies a mutated
+\code{\link[=act_tbl-class]{act_tbl}} with the time column updated to contain the same
+absolute time, but with the appropriate time zone for where the activity took
+place.
 }
 \details{
-Note that to avoid overuse of the API, this does an "approximation", in that
+Note that to avoid overuse of the APIs, this does an "approximation", in that
 it finds the correct time zone for the first point in the data frame, and
 assumes all points in that data frame use that time zone. Runs between time
 zones (or runs that cross daylight savings time shifts) will hence be
 recorded using a consistent, but not always pointwise correct, timezone.
 
-Note that you must have previously called \code{ggmap::register_google} to
+Note that you must have previously called \code{ggmap::register_google()} to
 register an API key before calling this.
+}
+\examples{
+\dontrun{
+example_gpx_file <- system.file(
+  "extdata",
+  "running_example.gpx.gz",
+  package = "activatr"
+)
+act_tbl <- parse_gpx(example_gpx_file)
+act_tbl_with_tz <- localize_to_time_zone(act_tbl)
+}
 }

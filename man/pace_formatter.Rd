@@ -2,19 +2,32 @@
 % Please edit documentation in R/mutate.R
 \name{pace_formatter}
 \alias{pace_formatter}
-\title{A formatter that takes a pace duration and returns a formatted M:SS string.}
+\title{Format pace durations}
 \usage{
 pace_formatter(pace)
 }
 \arguments{
-\item{pace}{a lubridate duration.}
+\item{pace}{A lubridate duration, returned by \code{lubridate::duration} or
+other methods in that family.}
 }
 \value{
-a formatted string representing the pace.
+A formatted string representing the pace.
 }
 \description{
-A formatter that takes a pace duration and returns a formatted M:SS string.
+\code{pace_formatter} takes a pace duration and returns a formatted string.
+}
+\details{
+This is most useful when plotting pace as one of the axes in a graph; rather
+than having the "number of seconds" as the axis value, this method can
+convert that to a more readable format.
+
+Most commonly, using something like
+\code{ggplot2::scale_y_reverse(label = pace_formatter)} will ensure the y-axis
+goes from "slowest" to "fastest", and shows paces like "8:30" rather than
+"510"
 }
 \examples{
-pace_formatter(lubridate::dseconds(390))
+pace_formatter(lubridate::dseconds(380))
+pace_formatter(lubridate::dseconds(510))
+pace_formatter(lubridate::dseconds(680))
 }

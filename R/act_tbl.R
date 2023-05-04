@@ -1,23 +1,54 @@
-#' Creates an activatr tibble, abbreviated \code{act_tbl}.
+#' `act_tbl` class
 #'
-#' \code{act_tbl} takes a tibble and returns an \code{act_tbl} object.
+#' The `act_tbl` S3 class is a subclass of [`data.frame`][base::data.frame()]
+#' and [`tibble`][tibble::tbl_df-class].
 #'
-#' @param x An object to turn into an \code{act_tbl}.
-#' @return \code{act_tbl} returns an object of class \code{"act_tbl"}, or
-#'         errors if the provided tibble is invalid.
-#' @rdname act_tbl
+#' In nearly every respect, it can be treated like a tibble; however, this
+#' allows the package to provide an improved `summary.act_tbl()` function
+#' to get an overview of the activity.
+#'
+#' @name act_tbl-class
+#' @aliases act_tbl-class
+NULL
+
+#' Create an [`act_tbl`][act_tbl-class].
+#'
+#' `act_tbl` takes a [`data.frame`][base::data.frame()] or
+#' [`tibble`][tibble::tbl_df-class]. and returns an [`act_tbl`][act_tbl-class]
+#' object.
+#'
+#' While the most common way to get an [`act_tbl`][act_tbl-class] is by calling
+#' `parse_gpx()` or `parse_tcx()`, it's possible to have a
+#' [`data.frame`][base::data.frame()] or [`tibble`][tibble::tbl_df-class] from
+#' another source, but still want to use the `summary.act_tbl()` functionality.
+#'
+#' This method validates that the provided [`tibble`][tibble::tbl_df-class]
+#' represents an activity (specifically, that it contains a `lat` and `lon`
+#' column, each of which is a double). If so, it returns an
+#' [`act_tbl`][act_tbl-class] representation of the provided input. If not, it
+#' throws an error.
+#'
+#' @param x A [`tibble`][tibble::tbl_df-class] to turn into an `act_tbl`.
+#' @return An S3 object of class `"act_tbl"`, or errors if the provided tibble
+#'         is invalid.
+#'
+#' @examples
+#' df <- tibble::tibble(lon = c(37.8, 37.9), lat = c(-122.8, -122.9))
+#' the_act_tbl <- activatr:::act_tbl(df)
+#' class(the_act_tbl)
+#'
+#' @noRd
 act_tbl <- function(x) {
   validate_act_tbl(new_act_tbl(x))
 }
 
-#' Constructor for \code{act_tbl}.
+#' Constructor for `act_tbl`.
 #'
-#' \code{new_act_tbl} constructs a \code{act_tbl} object.
+#' `new_act_tbl` constructs a `act_tbl` object.
 #'
-#' @param x An object to turn into an \code{act_tbl}.
-#' @return \code{new_act_tbl} returns an object of class \code{"act_tbl"}.
+#' @param x An object to turn into an `act_tbl`.
+#' @return `new_act_tbl` returns an object of class `"act_tbl"`.
 #' @importFrom tibble is_tibble
-#' @rdname act_tbl
 #'
 #' @noRd
 new_act_tbl <- function(x) {
@@ -25,16 +56,15 @@ new_act_tbl <- function(x) {
   structure(x, class = c("act_tbl", class(x)))
 }
 
-#' Validator for \code{act_tbl}.
+#' Validator for `act_tbl`.
 #'
-#' \code{validate_act_tbl} takes a newly constructed \code{act_tbl} object
+#' `validate_act_tbl` takes a newly constructed `act_tbl` object
 #' and ensures that it is valid: namely, that it has a lat and lon column.
 #'
-#' @param act_tbl A candidate that might be an \code{act_tbl}.
-#' @return \code{validate_act_tbl} returns its input, or errors if the
-#'         provided tibble is not suitable to be an \code{"act_tbl"}, i.e.
+#' @param act_tbl A candidate that might be an `act_tbl`.
+#' @return `validate_act_tbl` returns its input, or errors if the
+#'         provided tibble is not suitable to be an `"act_tbl"`, i.e.
 #'         it does not have lat and lon columns.
-#' @rdname act_tbl
 #'
 #' @noRd
 validate_act_tbl <- function(act_tbl) {
@@ -43,47 +73,65 @@ validate_act_tbl <- function(act_tbl) {
   act_tbl
 }
 
-#' Tests if the input is a \code{act_tbl}.
+#' Tests if the input is a `act_tbl`.
 #'
-#' \code{is_act_tbl} tests if a given object is an \code{act_tbl}.
+#' `is_act_tbl` tests if a given object is an `act_tbl`.
 #'
-#' @param act_tbl A candidate that might be an \code{act_tbl}.
-#' @return \code{is_act_tbl} returns TRUE iff \code{act_tbl} is a
-#'         \code{act_tbl}.
-#' @rdname act_tbl
+#' @param act_tbl A candidate that might be an `act_tbl`.
+#' @return `is_act_tbl` returns TRUE iff `act_tbl` is a
+#'         `act_tbl`.
 #'
 #' @noRd
 is_act_tbl <- function(act_tbl) {
   inherits(act_tbl, "act_tbl")
 }
 
-#' An S3 method for summary on \code{act_tbl} objects.
+#' Summarizes [`act_tbl`][act_tbl-class] objects.
 #'
-#' \code{summary.act_tbl} returns a tibble with canonical information about
-#' the activity. Designed to allow for easy creation of activity summary data
-#' sets by mapping summary over each \code{act_tbl} then using \code{bind_rows}
-#' to create a complete data set.
+#' `summary.act_tbl` returns a tibble with canonical information about
+#' the activity.
+#'
+#' This is designed to allow for easy creation of activity summary data
+#' sets by mapping summary over each [`act_tbl`][act_tbl-class] then using
+#' `dplyr::bind_rows()`, `purrr::map_dfr()`, or equivalent to create a complete
+#' data set.
 #'
 #' @export
 #'
 #' @param object an object for which a summary is desired
 #' @param full Whether every column should be included, and filled with NA if
 #'             missing. Most useful to ensure the tibble has the same shape for
-#'             every file, allowing eventual use of \code{bind_rows} to create
-#'             a full summary data set.
-#' @param units Which units should be used?
-#'              Imperial returns distance in miles, pace in minutes per mile,
-#'              and elevation in feet.
-#'              Metric returns distance in kilometers, pace in minutes per
-#'              kilometer, and elevation in meters.
+#'             every file, allowing eventual use of `dplyr::bind_rows()` or
+#'             `purrr::map_dfr()` to create a full summary data set.
+#' @param units
+#' Which units should be used?
+#' * "imperial" returns distance in miles, pace in minutes per mile, and
+#'   elevation in feet.
+#' * "metric" returns distance in kilometers, pace in minutes per kilometer, and
+#'   elevation in meters.
 #' @param ... Additional arguments.
-#' @return \code{summary.act_tbl} returns a tibble with a single row,
-#'         containing a summary of the given \code{act_tbl}.
+#' @return Returns a tibble with a single row, containing a summary of the given
+#'         [`act_tbl`][act_tbl-class].
 #' @importFrom dplyr lag mutate pull slice
 #' @importFrom lubridate as.duration dseconds
 #' @importFrom slider slide_index_dbl
 #' @importFrom tibble tribble
-#' @rdname act_tbl
+#'
+#' @examples
+#' example_gpx_file <- system.file(
+#'   "extdata",
+#'   "running_example.gpx.gz",
+#'   package = "activatr"
+#' )
+#' act_tbl <- parse_gpx(example_gpx_file)
+#' summary(act_tbl)
+#'
+#' \dontrun{
+#' files <- list.files("path/to/many/files", pattern = "*.gpx")
+#' gpxs <- files |> purrr::map(\(f) parse_gpx(f))
+#' summaries <- gpxs |> purrr::map_dfr(\(g) summary(g, full = TRUE))
+#' }
+#'
 summary.act_tbl <- function(object,
                             full = FALSE,
                             units = c("imperial", "metric"),

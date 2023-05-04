@@ -3,7 +3,7 @@
 \docType{data}
 \name{running_example_ggmap}
 \alias{running_example_ggmap}
-\title{The result of calling get_ggmap_from_df on running_example}
+\title{Precomputed example ggmap}
 \format{
 An object of class \code{ggmap} (inherits from \code{raster}) with 1280 rows and 1280 columns.
 }
@@ -11,20 +11,20 @@ An object of class \code{ggmap} (inherits from \code{raster}) with 1280 rows and
 running_example_ggmap
 }
 \description{
-This is the result of running:
+This is a precomputed ggmap for running_example.gpx, to avoid needing an
+API key in vignettes, which \code{get_ggmap_from_df()} requires.
 }
 \details{
-```
-running_file <- system.file(
+This is the result of running:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{running_file <- system.file(
   "extdata",
   "running_example.gpx",
   package = "activatr")
 running_df <- parse_gpx(running_file)
 running_example_ggmap <- get_ggmap_from_df(running_df)
-```
+}\if{html}{\out{</div>}}
 
-except using that in vignettes or examples is hard, because
-\code{get_ggmap_from_df} requires an api key be passed to `ggmap`.
-So this is the result of running that with a valid API key.
+after setting a valid API key.
 }
-\keyword{datasets}
+\keyword{internal}

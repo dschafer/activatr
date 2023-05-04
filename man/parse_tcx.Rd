@@ -2,57 +2,76 @@
 % Please edit documentation in R/parse.R
 \name{parse_tcx}
 \alias{parse_tcx}
-\title{Parses a TCX file into a tibble.}
+\title{Parses a TCX file into a \code{\link[=act_tbl-class]{act_tbl}}}
 \usage{
 parse_tcx(filename, detail = c("basic", "latlon", "advanced"), every = NA)
 }
 \arguments{
 \item{filename}{The TCX file to parse}
 
-\item{detail}{How much detail to parse from the TCX.
-* If "basic", the default, this will load \code{lat} / \code{lon} /
-\code{ele} / \code{time}.
-* If "latlon", it will only load \code{lat}/\code{lon}: useful for TCX
-files exported without time information.
-* If "advanced", it will load everything from basic, plus \code{hr} /
-\code{cad} / \code{atemp}: useful for files with HR information.}
+\item{detail}{How much detail to parse from the TCX
+\itemize{
+\item If \code{basic} (the default), this will parse \code{lat} / \code{lon} /
+\code{ele} / \code{time} columns.
+\item If \code{latlon}, this will only parse \code{lat}/\code{lon}. This is particularly
+useful for TCX files exported without time information, such as from
+Strava.
+\item If \code{advanced}, it will load everything from basic, plus \code{hr} /
+\code{cad}. This is most useful for files that have heart rate and cadence
+information.
+}}
 
 \item{every}{Optional. If provided, determines how frequently points will
 be sampled from the file, so if 10 is provided, every tenth point will
 be selected. If omitted or set to 1, every point will be selected. Must
-be a positive integer.}
+be a positive integer.
+
+This is most useful to quickly analyze a large file, since parsing is much
+faster when skipping 90\% of the data points.}
 }
 \value{
-A \code{act_tbl} with one row for each trackpoint in the TCX
-  (modified by \code{every}), and with the columns determined by
-  \code{detail}.
+A \code{\link[=act_tbl-class]{act_tbl}} with one row for each trackpoint in the
+TCX (modified by \code{every}), and with the columns determined by
+\code{detail}.
 
-    \item{lat}{latitude, a dbl in degrees between -90 and 90}
-    \item{lon}{longitude, a dbl in degrees between -180 and 180}
-    \item{ele}{elevation, a dbl in meters}
-    \item{time}{time, a dttm representing the time of the point}
-    \item{hr}{heart rate, an int in beats per minute}
-    \item{cad}{cadence, an int in one-foot steps per minute}
+\item{lat}{Latitude, a double in degrees between -90 and 90.}
+\item{lon}{Longitude, a double in degrees between -180 and 180.}
+\item{ele}{Elevation, a double in meters.}
+\item{time}{A date-time representing the time of the point.}
+\item{hr}{Heart rate, an int in beats per minute.}
+\item{cad}{Cadence, an int in one-foot steps per minute.}
 
- Additionally, attributes are set on the tibble containing top level data
- from the TCX. Each of these will be NA when not provided in the file.
+Additionally, attributes are set on the tibble containing top level data
+from the TCX. Each of these will be NA when not provided in the file.
 
-    \item{filename}{the filename this was parsed from. This is always present
-                    is always the value of the \code{filename} argument.}
-    \item{time}{time, a dttm representing the time of the TCX}
-    \item{type}{type, a chr}
+\item{filename}{The filename this was parsed from, a string. This is always
+present, and is always the value of the \code{filename}
+parameter.}
+\item{time}{A date-time representing the time of the activity.}
+\item{type}{A string.}
 }
 \description{
-This parses a standard Training Center XML (TCX) file into an \code{act_tbl}.
+This parses a standard Training Center XML (TCX) file into a
+data frame with class \code{\link[=act_tbl-class]{act_tbl}}. See \code{vignette("parsing")}
+for examples.
 }
 \examples{
-running_file <- system.file(
+example_tcx_file <- system.file(
   "extdata",
   "running_example.tcx.gz",
   package = "activatr"
 )
-running_df <- parse_gpx(running_file)
+act_tbl <- parse_tcx(example_tcx_file)
+print(act_tbl, n = 5)
+attr(act_tbl, "title")
+
+nrow(parse_tcx(example_tcx_file))
+nrow(parse_tcx(example_tcx_file, every = 100))
+
+colnames(parse_tcx(example_tcx_file))
+colnames(parse_tcx(example_tcx_file, detail = "latlon"))
+colnames(parse_tcx(example_tcx_file, detail = "advanced"))
 }
 \seealso{
-https://en.wikipedia.org/wiki/Training_Center_XML
+\url{https://en.wikipedia.org/wiki/Training_Center_XML}
 }

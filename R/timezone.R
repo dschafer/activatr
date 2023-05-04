@@ -1,15 +1,18 @@
-#' Uses Google Maps Time Zone APIs to localize the time zone.
+#' Localize time zone values
 #'
-#' This returns a mutated Activatr DF with the time column updated to reflect
-#' the correct time zone, using the Google Maps Time Zone APIs.
+#' `localize_to_time_zone` uses Google Maps Time Zone APIs to localize the
+#' time zone in an [`act_tbl`][act_tbl-class]. This modifies a mutated
+#' [`act_tbl`][act_tbl-class] with the time column updated to contain the same
+#' absolute time, but with the appropriate time zone for where the activity took
+#' place.
 #'
-#' Note that to avoid overuse of the API, this does an "approximation", in that
+#' Note that to avoid overuse of the APIs, this does an "approximation", in that
 #' it finds the correct time zone for the first point in the data frame, and
 #' assumes all points in that data frame use that time zone. Runs between time
 #' zones (or runs that cross daylight savings time shifts) will hence be
 #' recorded using a consistent, but not always pointwise correct, timezone.
 #'
-#' Note that you must have previously called \code{ggmap::register_google} to
+#' Note that you must have previously called `ggmap::register_google()` to
 #' register an API key before calling this.
 #'
 #' @importFrom dplyr mutate
@@ -19,16 +22,27 @@
 #'
 #' @export
 #'
-#' @param df A Activatr DF: a tibble from \code{parse_gpx} or \code{parse_tcx}.
-#' @return That same Activatr DF, but with the \code{time} column updated to be
-#'         in the local time zone rather than UTC.
+#' @param df An [`act_tbl`][act_tbl-class] object.
+#' @return That same [`act_tbl`][act_tbl-class], but with the `time` column
+#'         updated to be in the local time zone rather than UTC.
+#'
+#' @examples
+#' \dontrun{
+#' example_gpx_file <- system.file(
+#'   "extdata",
+#'   "running_example.gpx.gz",
+#'   package = "activatr"
+#' )
+#' act_tbl <- parse_gpx(example_gpx_file)
+#' act_tbl_with_tz <- localize_to_time_zone(act_tbl)
+#' }
 localize_to_time_zone <- function(df) {
   if (!is_act_tbl(df)) {
-    abort("df parameter to localize_to_time_zone() must be an Activatr DF.")
+    abort("df parameter to localize_to_time_zone() must be an act_tbl.")
   }
 
   if (!("time" %in% colnames(df))) {
-    abort("Cannot use localize_to_time_zone with Activatr DF lacking time.")
+    abort("Cannot use localize_to_time_zone with act_tbl lacking time.")
   }
 
   lat <- head(df, 1)$lat

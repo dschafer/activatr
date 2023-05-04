@@ -1,7 +1,6 @@
 ---
 title: "Advanced Parsing with activatr"
 author: "Daniel Schafer"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Advanced Parsing with activatr}

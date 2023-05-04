@@ -11,3 +11,4 @@ recorded by GPS devices. It allows easy parsing of the source files into
 standard R data formats, along with functions to compute derived data for
 the activity, and to plot the activity in a variety of ways.
 }
+\keyword{internal}
