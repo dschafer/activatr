@@ -40,3 +40,4 @@ Suggests:
     styler (>= 1.9.0),
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)

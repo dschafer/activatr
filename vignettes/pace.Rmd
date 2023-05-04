@@ -1,7 +1,6 @@
 ---
 title: "Handling Speed and Pace with activatr"
 author: "Daniel Schafer"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Handling Speed and Pace with activatr}
@@ -59,20 +58,17 @@ df$pace <- speed_to_mile_pace(df$speed)
 knitr::kable(head(df, 5))
 ```
 
-Finally, while `pace` here is a `lubridate` duration object, it's most easily understood in a "MM:SS" format: `pace_formatter` is provided for that: contrast the readability of the two pace graphs below, one without the formatter and the other with it:
+Finally, while `pace` here is a `lubridate` duration object, it's most easily understood in a "MM:SS" format: `pace_formatter` is provided for that: contrast the readability of the two pace graphs below, the first plotting pace unmodified, the second reversing the axis and adding the formatter.
 
 ```{r paceformatter, warning = FALSE, message = FALSE, fig.show = "hold"}
 library(ggplot2)
 library(dplyr)
 library(lubridate)
 ggplot(filter(df, as.numeric(pace) < 1200)) +
-  geom_line(aes(x = time, y = as.numeric(pace)), color = "blue") +
-  scale_y_reverse() +
-  ylab("pace")
+  geom_line(aes(x = time, y = as.numeric(pace)), color = "blue")
 ggplot(filter(df, as.numeric(pace) < 1200)) +
   geom_line(aes(x = time, y = as.numeric(pace)), color = "blue") +
-  scale_y_reverse(label = pace_formatter) +
-  ylab("pace")
+  scale_y_reverse(label = pace_formatter)
 ```
 
 Note that the speed and pace are calculated at every point, so they will often be somewhat noisy. Computing the rolling mean of the speed to smooth out the graph would be numerically inaccurate, so `mutate_with_speed` provides helper arguments to allow the speed to be computed over larger windows.
@@ -85,5 +81,6 @@ df$pace <- speed_to_mile_pace(df$speed)
 ggplot(filter(df, as.numeric(pace) < 1200)) +
   geom_line(aes(x = time, y = as.numeric(pace)), color = "blue") +
   scale_y_reverse(label = pace_formatter) +
-  ylab("pace")
+  xlab("Time") +
+  ylab("Pace")
 ```

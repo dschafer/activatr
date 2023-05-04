@@ -1,4 +1,21 @@
 url: https://dschafer.github.io/activatr/
 template:
   bootstrap: 5
-
+reference:
+- title: Parse
+  desc:  Parse a source file into a data frame.
+- contents:
+  - starts_with("parse_")
+  - act_tbl-class
+  - summary.act_tbl
+- title: Analyze
+  desc:  Modify the data frame to contain more helpful information.
+- contents:
+  - mutate_with_speed
+  - speed_to_mile_pace
+  - localize_to_time_zone
+- title: Display
+  desc:  Visualize the data frame in appropriate ways.
+- contents:
+  - get_ggmap_from_df
+  - pace_formatter

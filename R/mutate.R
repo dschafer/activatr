@@ -1,9 +1,14 @@
-#' Augments a Activatr DF with a distance variable.
+#' Augments a [`act_tbl`][act_tbl-class] with a distance column
 #'
-#' This returns a mutated Activatr DF with a new column representing distance,
-#' in meters. The distance is determined by looking at the lat/lon delta
+#' This returns a mutated [`act_tbl`][act_tbl-class] with a new column
+#' representing distance in meters.
+#'
+#' The distance is determined by looking at the lat/lon delta
 #' between the current point and the previous point: hence, it is always NA
 #' for the first row in the data frame.
+#'
+#' The `lead` and `lag` values are helpful to get "smoother" values, especially
+#' if the provided activity file has GPS errors in it.
 #'
 #' @importFrom dplyr lag lead mutate rowwise ungroup
 #' @importFrom geosphere distm
@@ -11,12 +16,16 @@
 #' @importFrom tibble add_column
 #' @importFrom rlang abort .data
 #'
-#' @param df A Activatr DF: a tibble from \code{parse_gpx} or \code{parse_tcx}.
-#' @param method If 2D (default), ignores elevation. If 3D, includes elevation.
-#' @param lead How far ahead to look for the "end" point
-#' @param lag How far behind to look for the "start" point
-#' @return That same Activatr DF, but with a new \code{distance} column, in
-#'        meters.
+#' @param df An [`act_tbl`][act_tbl-class] object.
+#' @param method If "2D" (default), ignores elevation. If "3D", includes
+#'               elevation. "3D" is not often necessary, but for skiing
+#'               activities is likely to yield a more accurate value.
+#' @param lead How far ahead to look for the "end" point.
+#' @param lag How far behind to look for the "start" point.
+#' @return That same [`act_tbl`][act_tbl-class], but with a new `distance`
+#'         column, in meters.
+#'
+#' @noRd
 mutate_with_distance <- function(df,
                                  method = c("2D", "3D"),
                                  lead = 0,
@@ -26,7 +35,7 @@ mutate_with_distance <- function(df,
   df <- act_tbl(df)
 
   if (method == "3D" && !("ele" %in% colnames(df))) {
-    abort("Cannot use 3D speed method with Activatr DF lacking elevation.")
+    abort("Cannot use 3D speed method with act_tbl lacking elevation.")
   }
 
   df2d <- df %>%
@@ -76,12 +85,18 @@ mutate_with_distance <- function(df,
   df %>% mutate(distance = df3d$dist3d)
 }
 
-#' Augments a Activatr DF with a speed variable.
+#' Augments an [`act_tbl`][act_tbl-class] with a speed column
 #'
-#' This returns a mutated Activatr DF with a new column representing speed, in
-#' meters per second. The speed is determined by looking at the time difference
+#' This returns a mutated [`act_tbl`][act_tbl-class] with a new column
+#' representing speed, in meters per second. See `vignette("pace")` for
+#' examples.
+#'
+#' The speed is determined by looking at the time difference
 #' between the current point and the previous point: hence, it is always NA
 #' for the first row in the data frame.
+#'
+#' The `lead` and `lag` values are helpful to get "smoother" values, especially
+#' if the provided activity file has GPS errors in it.
 #'
 #' @importFrom dplyr lag lead mutate rowwise ungroup
 #' @importFrom geosphere distm
@@ -91,23 +106,35 @@ mutate_with_distance <- function(df,
 #'
 #' @export
 #'
-#' @param df A Activatr DF: a tibble from \code{parse_gpx} or \code{parse_tcx}.
-#' @param method If 2D (default), ignores elevation. If 3D, includes elevation.
-#' @param lead How far ahead to look for the "end" point
-#' @param lag How far behind to look for the "start" point
-#' @return That same Activatr DF, but with a new \code{speed} column, in meters
-#'         per second.
+#' @param df An [`act_tbl`][act_tbl-class] object
+#' @param method If "2D" (default), ignores elevation. If "3D", includes
+#'               elevation. "3D" is not often necessary, but for skiing
+#'               activities is likely to yield a more accurate value.
+#' @param lead How far ahead to look for the "end" point.
+#' @param lag How far behind to look for the "start" point.
+#' @return That same [`act_tbl`][act_tbl-class], but with a new `speed` column,
+#'         in meters per second.
+#'
+#' @examples
+#' example_gpx_file <- system.file(
+#'   "extdata",
+#'   "running_example.gpx.gz",
+#'   package = "activatr"
+#' )
+#' example_act_tbl <- parse_gpx(example_gpx_file)
+#' example_act_tbl_with_speed <- mutate_with_speed(example_act_tbl)
+#' example_act_tbl_with_speed
 mutate_with_speed <- function(df, method = c("2D", "3D"), lead = 0, lag = 1) {
   method <- match.arg(method)
 
   df <- act_tbl(df)
 
   if (!("time" %in% colnames(df))) {
-    abort("Cannot use mutate_with_speed with Activatr DF lacking time.")
+    abort("Cannot use mutate_with_speed with act_tbl lacking time.")
   }
 
   if (method == "3D" && !("ele" %in% colnames(df))) {
-    abort("Cannot use 3D speed method with Activatr DF lacking elevation.")
+    abort("Cannot use 3D speed method with atc_tbl lacking elevation.")
   }
 
   df_distance <- df %>%
@@ -135,18 +162,24 @@ kilometer_in_meters <- 1000
 #' @noRd
 meters_in_feed <- 3.28084
 
-#' Converts a speed (in meters per second) to a mile pace
+#' Convert speed to mile pace
+#'
+#' `speed_to_mile_pace` converts a speed (in meters per second) to a mile pace.
+#' This method is vectorized, so it works on a column in a data frame. This is
+#' most useful after calling `mutate_with_speed()`, to convert that speed
+#' to the more-commonly-used pace. See `vignette("pace")` for examples.
 #'
 #' @importFrom dplyr na_if
 #' @importFrom lubridate dseconds
 #' @export
 #'
-#' @param speed a vector of speed values in meters per second,
-#'   as from \code{mutate_with_speed}.
-#' @return a corresponding vector of lubridate durations, representing the
-#'   mile pace.
+#' @param speed A vector of doubles representing speed in meters per second,
+#'   as from `mutate_with_speed()`.
+#' @return A corresponding vector of `lubridate::duration` values,
+#' representing the mile pace.
 #'
 #' @examples
+#' speed_to_mile_pace(3)
 #' speed_to_mile_pace(1)
 speed_to_mile_pace <- function(speed) {
   dseconds(mile_in_meters / na_if(speed, 0))
@@ -158,14 +191,15 @@ speed_to_mile_pace <- function(speed) {
 #' @importFrom lubridate dseconds
 #'
 #' @param speed a vector of speed values in meters per second,
-#'   as from \code{mutate_with_speed}.
+#'   as from `mutate_with_speed`.
 #' @return a corresponding vector of lubridate durations, representing the
 #'   kilometer pace.
 #'
 #' @noRd
 #'
 #' @examples
-#' speed_to_mile_pace(1)
+#' speed_to_kilometer_pace(3)
+#' speed_to_kilometer_pace(1)
 speed_to_kilometer_pace <- function(speed) {
   dseconds(kilometer_in_meters / na_if(speed, 0))
 }
@@ -173,7 +207,7 @@ speed_to_kilometer_pace <- function(speed) {
 #' Converts a distance in meters to a distance in miles.
 #'
 #' @param meters a vector of distance values in meters,
-#'   as from \code{mutate_with_distance}.
+#'   as from `mutate_with_distance`.
 #' @return a corresponding vector of distance values in miles.
 #'
 #' @noRd
@@ -197,16 +231,30 @@ meters_to_feet <- function(meters) {
   meters * meters_in_feed
 }
 
-#' A formatter that takes a pace duration and returns a formatted M:SS string.
+#' Format pace durations
+#'
+#' `pace_formatter` takes a pace duration and returns a formatted string.
+#'
+#' This is most useful when plotting pace as one of the axes in a graph; rather
+#' than having the "number of seconds" as the axis value, this method can
+#' convert that to a more readable format.
+#'
+#' Most commonly, using something like
+#' `ggplot2::scale_y_reverse(label = pace_formatter)` will ensure the y-axis
+#' goes from "slowest" to "fastest", and shows paces like "8:30" rather than
+#' "510"
 #'
 #' @importFrom lubridate as_datetime hour minute second
 #' @export
 #'
-#' @param pace a lubridate duration.
-#' @return a formatted string representing the pace.
+#' @param pace A lubridate duration, returned by `lubridate::duration` or
+#'             other methods in that family.
+#' @return A formatted string representing the pace.
 #'
 #' @examples
-#' pace_formatter(lubridate::dseconds(390))
+#' pace_formatter(lubridate::dseconds(380))
+#' pace_formatter(lubridate::dseconds(510))
+#' pace_formatter(lubridate::dseconds(680))
 pace_formatter <- function(pace) {
   m <- as.integer(
     60 * hour(as_datetime(pace)) +

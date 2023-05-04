@@ -2,21 +2,25 @@
 % Please edit documentation in R/mutate.R
 \name{speed_to_mile_pace}
 \alias{speed_to_mile_pace}
-\title{Converts a speed (in meters per second) to a mile pace}
+\title{Convert speed to mile pace}
 \usage{
 speed_to_mile_pace(speed)
 }
 \arguments{
-\item{speed}{a vector of speed values in meters per second,
-as from \code{mutate_with_speed}.}
+\item{speed}{A vector of doubles representing speed in meters per second,
+as from \code{mutate_with_speed()}.}
 }
 \value{
-a corresponding vector of lubridate durations, representing the
-  mile pace.
+A corresponding vector of \code{lubridate::duration} values,
+representing the mile pace.
 }
 \description{
-Converts a speed (in meters per second) to a mile pace
+\code{speed_to_mile_pace} converts a speed (in meters per second) to a mile pace.
+This method is vectorized, so it works on a column in a data frame. This is
+most useful after calling \code{mutate_with_speed()}, to convert that speed
+to the more-commonly-used pace. See \code{vignette("pace")} for examples.
 }
 \examples{
+speed_to_mile_pace(3)
 speed_to_mile_pace(1)
 }
