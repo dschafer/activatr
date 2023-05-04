@@ -9,7 +9,8 @@ Description: This contains helpful functions for parsing, managing, plotting, an
     standard R data formats, along with functions to compute derived data for
     the activity, and to plot the activity in a variety of ways.
 License: MIT + file LICENSE
-URL: https://github.com/dschafer/activatr
+URL: https://github.com/dschafer/activatr,
+    https://dschafer.github.io/activatr/
 BugReports: https://github.com/dschafer/activatr/issues
 Encoding: UTF-8
 LazyData: true
