@@ -54,9 +54,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="parse">Parse<a class="anchor" aria-label="anchor" href="#parse"></a></h2>
       
-      
+      <p class="section-desc"></p><p>Parse a source file into a data frame.</p>
 
       
     </div><div id="" class="section level2">
@@ -66,61 +66,74 @@
 
       <dl><dt>
           
-          <code><a href="act_tbl.html">act_tbl()</a></code> <code><a href="act_tbl.html">summary(<i>&lt;act_tbl&gt;</i>)</a></code> 
-        </dt>
-        <dd>Creates an activatr tibble, abbreviated <code>act_tbl</code>.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="activatr.html">activatr</a></code> 
-        </dt>
-        <dd>activatr: Utilities for Parsing and Plotting Activities</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_ggmap_from_df.html">get_ggmap_from_df()</a></code> 
-        </dt>
-        <dd>Get a ggmap object for a given Activatr DF.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="localize_to_time_zone.html">localize_to_time_zone()</a></code> 
-        </dt>
-        <dd>Uses Google Maps Time Zone APIs to localize the time zone.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mutate_with_distance.html">mutate_with_distance()</a></code> 
-        </dt>
-        <dd>Augments a Activatr DF with a distance variable.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mutate_with_speed.html">mutate_with_speed()</a></code> 
-        </dt>
-        <dd>Augments a Activatr DF with a speed variable.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="pace_formatter.html">pace_formatter()</a></code> 
-        </dt>
-        <dd>A formatter that takes a pace duration and returns a formatted M:SS string.</dd>
-      </dl><dl><dt>
-          
           <code><a href="parse_gpx.html">parse_gpx()</a></code> 
         </dt>
-        <dd>Parses a GPX file into a tibble.</dd>
+        <dd>Parses a GPX file into a <code>act_tbl</code></dd>
       </dl><dl><dt>
           
           <code><a href="parse_tcx.html">parse_tcx()</a></code> 
         </dt>
-        <dd>Parses a TCX file into a tibble.</dd>
+        <dd>Parses a TCX file into a <code>act_tbl</code></dd>
       </dl><dl><dt>
           
-          <code><a href="running_example_ggmap.html">running_example_ggmap</a></code> 
+          <code><a href="act_tbl-class.html">act_tbl-class</a></code> 
         </dt>
-        <dd>The result of calling get_ggmap_from_df on running_example</dd>
+        <dd><code>act_tbl</code> class</dd>
+      </dl><dl><dt>
+          
+          <code><a href="summary.act_tbl.html">summary(<i>&lt;act_tbl&gt;</i>)</a></code> 
+        </dt>
+        <dd>Summarizes <code>act_tbl</code> objects.</dd>
+      </dl></div><div class="section level2">
+      <h2 id="analyze">Analyze<a class="anchor" aria-label="anchor" href="#analyze"></a></h2>
+      
+      <p class="section-desc"></p><p>Modify the data frame to contain more helpful information.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="mutate_with_speed.html">mutate_with_speed()</a></code> 
+        </dt>
+        <dd>Augments an <code>act_tbl</code> with a speed column</dd>
       </dl><dl><dt>
           
           <code><a href="speed_to_mile_pace.html">speed_to_mile_pace()</a></code> 
         </dt>
-        <dd>Converts a speed (in meters per second) to a mile pace</dd>
+        <dd>Convert speed to mile pace</dd>
+      </dl><dl><dt>
+          
+          <code><a href="localize_to_time_zone.html">localize_to_time_zone()</a></code> 
+        </dt>
+        <dd>Localize time zone values</dd>
+      </dl></div><div class="section level2">
+      <h2 id="display">Display<a class="anchor" aria-label="anchor" href="#display"></a></h2>
+      
+      <p class="section-desc"></p><p>Visualize the data frame in appropriate ways.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="get_ggmap_from_df.html">get_ggmap_from_df()</a></code> 
+        </dt>
+        <dd>Get a map for a given <code>act_tbl</code></dd>
+      </dl><dl><dt>
+          
+          <code><a href="pace_formatter.html">pace_formatter()</a></code> 
+        </dt>
+        <dd>Format pace durations</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

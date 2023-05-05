@@ -28,7 +28,7 @@
     <loc>https://dschafer.github.io/activatr/news/index.html</loc>
   </url>
   <url>
-    <loc>https://dschafer.github.io/activatr/reference/act_tbl.html</loc>
+    <loc>https://dschafer.github.io/activatr/reference/act_tbl-class.html</loc>
   </url>
   <url>
     <loc>https://dschafer.github.io/activatr/reference/activatr.html</loc>
@@ -41,9 +41,6 @@
   </url>
   <url>
     <loc>https://dschafer.github.io/activatr/reference/localize_to_time_zone.html</loc>
-  </url>
-  <url>
-    <loc>https://dschafer.github.io/activatr/reference/mutate_with_distance.html</loc>
   </url>
   <url>
     <loc>https://dschafer.github.io/activatr/reference/mutate_with_speed.html</loc>
@@ -62,5 +59,8 @@
   </url>
   <url>
     <loc>https://dschafer.github.io/activatr/reference/speed_to_mile_pace.html</loc>
+  </url>
+  <url>
+    <loc>https://dschafer.github.io/activatr/reference/summary.act_tbl.html</loc>
   </url>
 </urlset>
