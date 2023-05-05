@@ -9,3 +9,5 @@ cran-comments.md
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^data-raw$
+^activatr\.png$
