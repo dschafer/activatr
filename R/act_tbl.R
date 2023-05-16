@@ -114,7 +114,7 @@ is_act_tbl <- function(act_tbl) {
 #'         [`act_tbl`][act_tbl-class].
 #' @importFrom dplyr lag mutate pull slice
 #' @importFrom lubridate as.duration dseconds
-#' @importFrom slider slide_index_dbl
+#' @importFrom slider slide_index_mean
 #' @importFrom tibble tribble
 #'
 #' @examples
@@ -209,12 +209,11 @@ summary.act_tbl <- function(object,
     period <- dseconds(min(15, nrow(object)))
     elev_df <- object %>%
       mutate(
-        ele = slide_index_dbl(
+        ele = slide_index_mean(
           .data$ele,
           .data$time,
-          mean,
-          .before = period,
-          .after = period
+          before = period,
+          after = period
         )
       ) %>%
       mutate(
