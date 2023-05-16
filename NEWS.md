@@ -1,5 +1,11 @@
 # activatr (development version)
 
+## Breaking Changes
+
+* Require R 4.1, and use native pipe rather than `magrittr`.
+
+## Other Improvements
+
 * Use `slider::slide_index_mean` rather than `slider::slide_index_dbl`.
 * Update documentation as part of `pkgdown` site creation.
 
