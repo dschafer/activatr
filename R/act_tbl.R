@@ -155,15 +155,15 @@ summary.act_tbl <- function(object,
   }
 
   # Populate it with distance
-  distance <- object %>%
-    mutate_with_distance() %>%
-    pull(.data$distance) %>%
+  distance <- object |>
+    mutate_with_distance() |>
+    pull(.data$distance) |>
     sum(na.rm = TRUE) / distance_factor
   summary <- tribble(~Distance, distance)
 
   if (full) {
     # Fill in the columns in advance
-    summary <- summary %>% mutate(
+    summary <- summary |> mutate(
       Date = NA,
       Time = NA,
       AvgPace = NA,
@@ -181,33 +181,33 @@ summary.act_tbl <- function(object,
 
   # If we have time, add date, time, and pace
   if ("time" %in% colnames(object)) {
-    date <- object %>%
-      slice(1) %>%
+    date <- object |>
+      slice(1) |>
       pull(time)
 
-    time <- object %>%
-      mutate(time_diff = .data$time - lag(.data$time)) %>%
-      pull(.data$time_diff) %>%
-      sum(na.rm = TRUE) %>%
+    time <- object |>
+      mutate(time_diff = .data$time - lag(.data$time)) |>
+      pull(.data$time_diff) |>
+      sum(na.rm = TRUE) |>
       as.duration()
-    summary <- summary %>% mutate(Date = date, Time = time)
+    summary <- summary |> mutate(Date = date, Time = time)
 
-    paces <- object %>%
-      mutate_with_speed() %>%
-      mutate(pace = pace_converter(.data$speed)) %>%
+    paces <- object |>
+      mutate_with_speed() |>
+      mutate(pace = pace_converter(.data$speed)) |>
       pull(.data$pace)
-    avgpace <- (time / distance) %>% as.duration()
-    maxpace <- min(paces, na.rm = TRUE) %>% # min since low paces are faster
+    avgpace <- (time / distance) |> as.duration()
+    maxpace <- min(paces, na.rm = TRUE) |> # min since low paces are faster
       as.duration()
 
-    summary <- summary %>% mutate(AvgPace = avgpace, MaxPace = maxpace)
+    summary <- summary |> mutate(AvgPace = avgpace, MaxPace = maxpace)
   }
 
   # If we have elevation, add AvgElev, ElevGain and ElevLoss
   if ("ele" %in% colnames(object)) {
     # We use a rolling 30 second average of elevation to smooth out jitter.
     period <- dseconds(min(15, nrow(object)))
-    elev_df <- object %>%
+    elev_df <- object |>
       mutate(
         ele = slide_index_mean(
           .data$ele,
@@ -215,22 +215,22 @@ summary.act_tbl <- function(object,
           before = period,
           after = period
         )
-      ) %>%
+      ) |>
       mutate(
         elevdelta = .data$ele - lag(.data$ele),
         elevgain = ifelse(.data$elevdelta > 0, .data$elevdelta, 0),
         elevloss = ifelse(.data$elevdelta < 0, -.data$elevdelta, 0)
       )
-    elevgain <- elev_df %>%
-      pull(.data$elevgain) %>%
+    elevgain <- elev_df |>
+      pull(.data$elevgain) |>
       sum(na.rm = TRUE)
-    elevloss <- elev_df %>%
-      pull(.data$elevloss) %>%
+    elevloss <- elev_df |>
+      pull(.data$elevloss) |>
       sum(na.rm = TRUE)
-    avgelev <- object %>%
-      pull(.data$ele) %>%
+    avgelev <- object |>
+      pull(.data$ele) |>
       mean(na.rm = TRUE)
-    summary <- summary %>% mutate(
+    summary <- summary |> mutate(
       ElevGain = ele_converter(elevgain),
       ElevLoss = ele_converter(elevloss),
       AvgElev = ele_converter(avgelev)
@@ -239,29 +239,29 @@ summary.act_tbl <- function(object,
 
   # If we have hr, add AvgHR and MaxHR
   if ("hr" %in% colnames(object)) {
-    avghr <- object %>%
-      pull(.data$hr) %>%
+    avghr <- object |>
+      pull(.data$hr) |>
       mean(na.rm = TRUE)
-    maxhr <- object %>%
-      pull(.data$hr) %>%
+    maxhr <- object |>
+      pull(.data$hr) |>
       max(na.rm = TRUE)
-    summary <- summary %>% mutate(AvgHR = avghr, MaxHR = maxhr)
+    summary <- summary |> mutate(AvgHR = avghr, MaxHR = maxhr)
   }
 
   # If we have cad, add AvgCad and MaxCad
   if ("cad" %in% colnames(object)) {
-    avgcad <- object %>%
-      pull(.data$cad) %>%
+    avgcad <- object |>
+      pull(.data$cad) |>
       mean(na.rm = TRUE)
-    maxcad <- object %>%
-      pull(.data$cad) %>%
+    maxcad <- object |>
+      pull(.data$cad) |>
       max(na.rm = TRUE)
-    summary <- summary %>% mutate(AvgCadence = avgcad, MaxCadence = maxcad)
+    summary <- summary |> mutate(AvgCadence = avgcad, MaxCadence = maxcad)
   }
 
   # If we have a title, add it in
   if (!is.null(attr(object, "title"))) {
-    summary <- summary %>% mutate(Title = attr(object, "title"))
+    summary <- summary |> mutate(Title = attr(object, "title"))
   }
 
   summary

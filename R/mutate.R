@@ -12,7 +12,6 @@
 #'
 #' @importFrom dplyr lag lead mutate rowwise ungroup
 #' @importFrom geosphere distm
-#' @importFrom magrittr %>%
 #' @importFrom tibble add_column
 #' @importFrom rlang abort .data
 #'
@@ -38,7 +37,7 @@ mutate_with_distance <- function(df,
     abort("Cannot use 3D speed method with act_tbl lacking elevation.")
   }
 
-  df2d <- df %>%
+  df2d <- df |>
     mutate(
       start_lat = dplyr::lag(.data$lat, lag),
       start_lon = dplyr::lag(.data$lon, lag),
@@ -48,8 +47,8 @@ mutate_with_distance <- function(df,
         is.na(.data$start_lon) |
         is.na(.data$end_lat) |
         is.na(.data$end_lon))
-    ) %>%
-    rowwise() %>%
+    ) |>
+    rowwise() |>
     mutate(
       dist2d = ifelse(
         .data$isna,
@@ -59,30 +58,30 @@ mutate_with_distance <- function(df,
           c(.data$start_lon, .data$start_lat)
         )
       )
-    ) %>%
+    ) |>
     ungroup()
 
   if (method == "2D") {
-    return(df %>% mutate(distance = df2d$dist2d))
+    return(df |> mutate(distance = df2d$dist2d))
   }
 
-  df3d <- df2d %>%
+  df3d <- df2d |>
     mutate(
       start_ele = dplyr::lag(.data$ele, lag),
       end_ele = dplyr::lead(.data$ele, lead),
       isna = (.data$isna | is.na(.data$start_ele) | is.na(.data$end_ele))
-    ) %>%
-    rowwise() %>%
+    ) |>
+    rowwise() |>
     mutate(
       dist3d = ifelse(
         .data$isna,
         NA,
         sqrt(.data$dist2d**2 + (.data$end_ele - .data$start_ele)**2)
       )
-    ) %>%
+    ) |>
     ungroup()
 
-  df %>% mutate(distance = df3d$dist3d)
+  df |> mutate(distance = df3d$dist3d)
 }
 
 #' Augments an [`act_tbl`][act_tbl-class] with a speed column
@@ -100,7 +99,6 @@ mutate_with_distance <- function(df,
 #'
 #' @importFrom dplyr lag lead mutate rowwise ungroup
 #' @importFrom geosphere distm
-#' @importFrom magrittr %>%
 #' @importFrom tibble add_column
 #' @importFrom rlang abort .data
 #'
@@ -137,19 +135,19 @@ mutate_with_speed <- function(df, method = c("2D", "3D"), lead = 0, lag = 1) {
     abort("Cannot use 3D speed method with atc_tbl lacking elevation.")
   }
 
-  df_distance <- df %>%
+  df_distance <- df |>
     mutate_with_distance(method, lead, lag)
-  df_speed <- df_distance %>%
+  df_speed <- df_distance |>
     mutate(
       start_time = dplyr::lag(.data$time, lag),
       end_time = dplyr::lead(.data$time, lead),
       time_diff = as.numeric(.data$end_time - .data$start_time, units = "secs")
-    ) %>%
-    rowwise() %>%
-    mutate(speed = .data$distance / .data$time_diff) %>%
+    ) |>
+    rowwise() |>
+    mutate(speed = .data$distance / .data$time_diff) |>
     ungroup()
 
-  df %>% mutate(speed = df_speed$speed)
+  df |> mutate(speed = df_speed$speed)
 }
 
 #' Constant for conversion

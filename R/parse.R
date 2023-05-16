@@ -255,7 +255,6 @@ parse_tcx <- function(filename,
 #' @param trackpoints a vector of trackpoints, as from
 #'                    `xml_find_all(xmldoc, ".//d1:trkpt")`
 #' @param tagname The name of the tag to look for and extract
-#' @importFrom magrittr %>%
 #' @importFrom xml2 xml_add_child xml_find_all xml_text
 #'
 #' @noRd
