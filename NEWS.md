@@ -1,3 +1,5 @@
+# activatr (development version)
+
 # activatr 0.1.1
 
 * Switch dependency from `timetk` to `slider` to avoid unnecessary indirection (#3).
