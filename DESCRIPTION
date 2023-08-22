@@ -1,7 +1,7 @@
 Package: activatr
 Type: Package
 Title: Utilities for Parsing and Plotting Activities
-Version: 0.2.0
+Version: 0.2.0.9000
 Authors@R: person("Daniel", "Schafer", email = "dan.schafer@gmail.com", role = c("aut", "cph", "cre"))
 Description: This contains helpful functions for parsing, managing, plotting, and
     visualizing activities, most often from GPX (GPS Exchange Format) files
