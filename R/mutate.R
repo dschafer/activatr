@@ -44,7 +44,7 @@ mutate_with_distance <- function(df,
       end_lat = dplyr::lead(.data$lat, lead),
       end_lon = dplyr::lead(.data$lon, lead),
       isna = (is.na(.data$start_lat) |
-        is.na(.data$start_lon) |
+        is.na(.data$start_lon) | # nolint (indentation_linter)
         is.na(.data$end_lat) |
         is.na(.data$end_lon))
     ) |>
