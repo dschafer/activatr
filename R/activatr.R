@@ -9,7 +9,7 @@
 #' @docType package
 #' @name activatr
 #' @keywords internal
-NULL
+"_PACKAGE"
 
 release_questions <- function() {
   c(

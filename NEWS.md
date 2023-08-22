@@ -8,6 +8,7 @@
 
 * Use `slider::slide_index_mean` rather than `slider::slide_index_dbl`.
 * Update documentation as part of `pkgdown` site creation.
+* Fix incorrect documentation of package (#14).
 
 # activatr 0.1.1
 
