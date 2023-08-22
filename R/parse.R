@@ -77,7 +77,7 @@ parse_gpx <- function(filename,
   if (is.na(every) || every == 1) {
     trackpoints <- xml_find_all(xmldoc, ".//d1:trkpt")
   } else if (!is.numeric(every) ||
-    every < 1 ||
+    every < 1 || # nolint (indentation_linter)
     !all.equal(every, abs(as.integer(every)))) {
     abort(paste0(
       "parse_gpx was called with every ",
@@ -197,7 +197,7 @@ parse_tcx <- function(filename,
   if (is.na(every) || every == 1) {
     trackpoints <- xml_find_all(xmldoc, ".//d1:Trackpoint[d1:Position]")
   } else if (!is.numeric(every) ||
-    every < 1 ||
+    every < 1 || # nolint (indentation_linter)
     !all.equal(every, abs(as.integer(every)))) {
     abort(paste0(
       "parse_tcx was called with every ",
